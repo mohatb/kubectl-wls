@@ -1,5 +1,27 @@
 #!/bin/sh
 
+#Usage message
+usage()
+{
+        echo 'Interactive:'
+        echo '$ kubectl wls'
+        echo " "
+        echo 'Non-Interactive'
+        echo '$ kubectl wls NODE'
+        echo " "
+        echo "Example: kubectl wls minikube"
+        echo " "
+        echo "If you are running wls as a script without krew"
+        echo "./kubectl-wls"
+        exit 0
+}
+
+if [ "$1" = "-h" ]
+then
+        usage
+        exit 1
+fi
+
 #Check user input.
 if [ -z "$1" ]; then
           kubectl get nodes
