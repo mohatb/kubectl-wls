@@ -80,7 +80,7 @@ read -p "Enter the windows node ssh user: " WINDOWSSSHUSER
 
     # Check the node existance and IP
     kubectl get nodes "$NODE" -o wide >/dev/null || exit 1
-    WINNODEIP=$(kubectl get node aksnpwin000000 --output=jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
+    WINNODEIP=$(kubectl get node $NODE --output=jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
 
     #nsenter JSON overrrides
     OVERRIDES="$(cat <<EOT
