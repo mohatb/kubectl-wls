@@ -1,5 +1,7 @@
+Kubectl Windows-Linux-Shell
+
 # kubectl-wls:
-kubectl-wls is an interactive shell script and kubectl plugin that allows you to access a kubernetes windows or linux nodes.
+kubectl-wls stands for kubectl Kubectl Windows-Linux-Shell, it is an interactive shell script and also a kubectl plugin that allows you to access a kubernetes windows or linux nodes shell.
 
 # How it works ?
 
