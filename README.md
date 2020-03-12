@@ -1,17 +1,19 @@
 # kubectl-wls:
-kubectl-wls is a shell script that allows you to get into a node shell.
+kubectl-wls is a shell script and kubectl plugins that allows you to access a kubernetes windows or linux nodes.
 
 # How it works ?
 
-It works by creating a pod (with a priviledged container) in the node you specified and using nsenter http://man7.org/linux/man-pages/man1/nsenter.1.html for getting a shell into your kuberntes nodes.
+For Linux Nodes:
 
-The created pod is from alpine official image which is ~2.6 mb in size, once you exit the shell, the pod will be deleted.
+It works by creating a pod (with a priviledged container) in the node you specified and using nsenter http://man7.org/linux/man-pages/man1/nsenter.1.html for getting a shell into your linux nodes.
 
-# For Windows Nodes:
 
-It is required to have OpenSSH on windows, with credentials user/pass. SSH keys are currently not supported but will be added soon/
+For Windows Nodes:
 
+It is required to have OpenSSH on windows, with user/pass credentials. SSH keys are currently not supported but will be added soon/
 https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse
+
+Since windows images are large in size, wls will create a linux image on a linux node and establish an SSH connection to the windows node.
 
 Note: AKS nodes have OpenSSH installed by default.
 
