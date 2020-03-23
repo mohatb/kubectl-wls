@@ -22,7 +22,7 @@ Note: AKS nodes have OpenSSH installed by default.
 
 # Installation:
 ```
-wget https://raw.githubusercontent.com/mohatb/kubectl-wls/master/kubectl-wsl.sh
+wget https://raw.githubusercontent.com/mohatb/kubectl-wls/master/kubectl-wls
 
 chmod +x ./kubectl-wls
 
