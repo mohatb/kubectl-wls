@@ -4,14 +4,14 @@
 usage()
 {
         echo 'Interactive:'
-        echo '$ kubectl wls'
+        echo '$ kubectl-wls'
         echo " "
         echo 'Non-Interactive'
-        echo '$ kubectl wls NODE'
+        echo '$ kubectl-wls NODE'
         echo " "
-        echo "Example: kubectl wls minikube"
+        echo "Example: kubectl-wls minikube"
         echo " "
-        echo "If you are running wls as a script without krew"
+        echo "If you are running wls as a script"
         echo "./kubectl-wls"
         exit 0
 }
