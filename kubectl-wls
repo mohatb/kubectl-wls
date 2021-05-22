@@ -33,10 +33,15 @@ usage()
         echo 'Non-Interactive'
         echo '$ kubectl-exec NODE'
         echo " "
-        echo "Example: kubectl-exec minikube"
+        echo "You can mount node root volume to pod with -mount"
+        echo "./kubectl-exec -mount"
         echo " "
-        echo "If you are running as a script"
-        echo "./kubectl-exec"
+        echo "Examples:"
+        echo "kubectl-exec"
+        echo "kubectl-exec minikube"
+        echo "kubectl-exec -mount"
+        echo "kubectl-exec -mount node1"
+        echo " "
         exit 0
 }
 
