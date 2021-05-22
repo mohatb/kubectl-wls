@@ -40,28 +40,6 @@ usage()
         exit 0
 }
 
-if [ "$1" = "-h" ]
-then
-        usage
-        exit 1
-fi
-
-#Check user input.
-if [ -z "$1" ]; then
-        
-        mapfile -t nodenumber < <( kubectl get nodes --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' )
-
-        for i in "${!nodenumber[@]}"; do
-          printf "$i ${nodenumber[i]} \n"
-        done
-        
-        read -p "Enter the node number: " NODE_INDEX
-        NODE=${nodenumber[NODE_INDEX]}
-
-    else
-        NODE=$1
-    fi
-
 #windows function to ssh to linux nodes
 LINUXNODES () {
 
@@ -144,7 +122,7 @@ EOT
 
 echo "creating pod \"$POD\" for windows ssh"
 
-if [ $use_generator = true]
+if [ $use_generator = true ]
 then
         kubectl run --rm --image $IMAGE --overrides="$OVERRIDES" --generator=run-pod/v1 -ti "$POD"
 else
@@ -152,6 +130,110 @@ else
 fi
 
 }
+
+#function to mount linux root file system to pod
+LINUXHOSTMOUNT () {
+
+    IMAGE="alpine"
+    POD="$NODE-hostpath-mount"
+
+    # Check the node existance
+    kubectl get node "$NODE" >/dev/null || exit 1
+
+    OVERRIDES="$(cat <<EOT
+{
+  "spec": {
+    "hostPID": true,
+    "nodeSelector": {
+      "kubernetes.io/os": "linux"
+      },
+    "containers": [
+      {
+        "securityContext": {
+          "privileged": true
+        },
+        "image": "$IMAGE",
+        "volumeMounts": [
+            {
+              "mountPath": "/host",
+              "name": "hostrootvolume",
+              "readOnly": false
+            }
+          ],
+        "name": "hostmount",
+        "stdin": true,
+        "stdinOnce": true,
+        "tty": true
+      }
+    ],
+    "volumes": [
+      {
+        "name": "hostrootvolume",
+        "hostPath": {
+          "path": "/",
+          "name": "hostrootvolume"
+        }
+      }
+    ]
+  }
+}
+EOT
+)"
+
+echo "creating pod \"$POD\" on node \"$NODE\""
+if [ $use_generator = true ]
+then
+        kubectl run --image $IMAGE --overrides="$OVERRIDES" --generator=run-pod/v1 "$POD"
+else
+        kubectl run --image $IMAGE --overrides="$OVERRIDES" "$POD"
+fi
+
+}
+
+
+#check if user is looking for focumentation with -h
+if [ "$1" = "-h" ]
+then
+        usage
+        exit 1
+fi
+
+#Check user input for shell access
+if [ -z "$1" ]; then
+        
+        mapfile -t nodenumber < <( kubectl get nodes --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' )
+
+        for i in "${!nodenumber[@]}"; do
+          printf "$i ${nodenumber[i]} \n"
+        done
+        
+        read -p "Enter the node number: " NODE_INDEX
+        NODE=${nodenumber[NODE_INDEX]}
+
+    else
+        NODE=$1
+    fi
+
+#Statement to check if user is looking to mount root file system in linux nodes to the pod.
+if [ "$1" = "-mount" ] && [ -n "$2" ]; then
+#Check if the user provided node number
+       NODE="$2"
+       LINUXHOSTMOUNT
+       exit 1
+
+  elif [ "$1" = "-mount" ] && [ -z "$2" ]; then
+#If the user did not provide a node number, use interactive to get it.
+		mapfile -t nodenumber < <( kubectl get nodes --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' )
+
+        for i in "${!nodenumber[@]}"; do
+          printf "$i ${nodenumber[i]} \n"
+        done
+        
+        read -p "Enter the node number: " NODE_INDEX
+        NODE=${nodenumber[NODE_INDEX]}
+        LINUXHOSTMOUNT
+        exit 1
+fi
 
 #Evaluate if windows node.
 NODEOS=$(kubectl get node $NODE -o jsonpath="{.metadata.labels.\kubernetes\.io/os}")
