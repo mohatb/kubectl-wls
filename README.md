@@ -31,17 +31,17 @@ sudo mv ./kubectl-wls /usr/local/bin/kubectl-wls
 
 # Usage:
 ```
-$ kubectl-exec
+$ kubectl-wls
  
 Non-Interactive
-$ kubectl-exec NODE
+$ kubectl-wls NODE
  
 You can mount node root volume to pod with -mount
-./kubectl-exec -mount
+./kubectl-wls -mount
  
 Examples:
-kubectl-exec
-kubectl-exec minikube
-kubectl-exec -mount
-kubectl-exec -mount node1
+kubectl-wls
+kubectl-wls minikube
+kubectl-wls -mount
+kubectl-wls -mount node1
 ```
