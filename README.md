@@ -31,13 +31,14 @@ sudo mv ./kubectl-wls /usr/local/bin/kubectl-wls
 
 # Usage:
 ```
+Interavtive
 $ kubectl-wls
  
 Non-Interactive
 $ kubectl-wls NODE
  
-You can mount node root volume to pod with -mount
-./kubectl-wls -mount
+Create a mount pod that can be used to transfer data between node and local
+$ kubectl-wls -mount
  
 Examples:
 kubectl-wls
